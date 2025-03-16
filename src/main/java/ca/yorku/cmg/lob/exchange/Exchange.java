@@ -3,6 +3,8 @@ package ca.yorku.cmg.lob.exchange;
 import java.util.ArrayList;
 
 import ca.yorku.cmg.lob.orderbook.Ask;
+
+import ca.yorku.cmg.lob.orderbook.Bid;
 //...
 
 /**
@@ -13,7 +15,7 @@ public class Exchange {
     Orderbook book;
     SecurityList securities = new SecurityList();
     AccountsList accounts = new AccountsList();
-    ArrayList tradesLog = new ArrayList();
+    ArrayList<ITrade> tradesLog = new ArrayList<>();
 
     long totalFees = 0;
 
@@ -32,7 +34,7 @@ public class Exchange {
      */
     public boolean validateOrder(IOrder o) {
         // Does ticker exist? See if the security associated with the order exists in the list of securities
-        if (securities.getSecurity(o.getTicker())== null){
+        if (securities.getSecurity(o.getTicker()) == null) {
             System.err.println("Order validation: ticker " + o.getTicker() + " not supported.");
             return (false);
         }
@@ -69,7 +71,7 @@ public class Exchange {
             //Go to the asks half-book, see if there are matching asks (selling offers) and process them
             oOutcome =book.getAskbook().processOrder(o, time);
             if(oOutcome.getunfulfilledorder().getQuantity()>0){
-                book.getBidBook().addOrder(oOutcome.getUnfulfilledOrder());
+                book.getAskBook().addOrder(oOutcome.getUnfulfilledOrder());
             }
         } else { //order is an ask
             //Go to the bids half-book and see if there are matching bids (buying offers) and process them
