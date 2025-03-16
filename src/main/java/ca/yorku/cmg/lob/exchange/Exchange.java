@@ -32,13 +32,13 @@ public class Exchange {
      */
     public boolean validateOrder(IOrder o) {
         // Does ticker exist? See if the security associated with the order exists in the list of securities
-        if (securities.getSecurity(o.getTicker()== null){
+        if (securities.getSecurity(o.getTicker())== null){
             System.err.println("Order validation: ticker " + o.getTicker() + " not supported.");
             return (false);
         }
 //Does the trader exist? Check to see if the trader exists
         if (accounts.getAccount(o.getTraderID())==null){
-            System.err.println("Order validation: trader with ID " + o.getID() + " not registered with the exchange.");
+            System.err.println("Order validation: trader with ID " + o.getTraderID() + " not registered with the exchange.");
             return (false);
         }
         int pos = accounts.getAccount(o.getTraderID()).getPosition(o.getTicker());
@@ -68,15 +68,15 @@ public class Exchange {
         if (o instanceof Bid) {// Order is a bid
             //Go to the asks half-book, see if there are matching asks (selling offers) and process them
             oOutcome =book.getAskbook().processOrder(o, time);
-            if(oOutcome.getunfulfilledorder().getQuantity>0){
+            if(oOutcome.getunfulfilledorder().getQuantity()>0){
                 book.getBidBook().addOrder(oOutcome.getUnfulfilledOrder());
             }
         } else { //order is an ask
             //Go to the bids half-book and see if there are matching bids (buying offers) and process them
-            oOutcome =book.getBidBook().processOrder(o, time);
+            oOutcome =book.getAskBook().processOrder(o, time);
             //If the quanity of the unfulfilled order in the outcome is not zero
             if (oOutcome.getUnfulfilledOrder().getQuantity() > 0) {
-                book.getBidBook().addOrder(oOutcome.getUnfulfilledOrder())
+                book.getBidBook().addOrder(oOutcome.getUnfulfilledOrder());
             }
         }
         if (oOutcome.getResultingTrades() != null) {
