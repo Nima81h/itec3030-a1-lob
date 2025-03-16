@@ -32,7 +32,7 @@ public class Exchange {
      */
     public boolean validateOrder(IOrder o) {
         // Does ticker exist? See if the security associated with the order exists in the list of securities
-        if (securities.getSecurity(o.getTicker()== null){
+        if (securities.getSecurity(o.getTicker())== null){
             System.err.println("Order validation: ticker " + o.getTicker() + " not supported.");
             return (false);
         }
@@ -44,9 +44,9 @@ public class Exchange {
         int pos = accounts.getAccount(o.getTraderID()).getPosition(o.getTicker());
         long bal =accounts.getAccount(o.getTraderID()).getBalance();
         if ((o instanceof Ask) && (pos < o.getQuantity())) {
-            System.err.println("Order validation: seller with ID " +o.getID() + " not enough shares
-                    of " + o.getTicker() + ": has " + pos + " and tries to sell " +
-            o.getQuantity());
+            System.err.println("Order validation: seller with ID " + o.getID() + 
+        " does not have enough shares of " + o.getTicker() + 
+        ": has " + pos + " and tries to sell " + o.getQuantity());
             return (false);
         }
         if ((o instanceof Bid) && (bal < o.getValue())) {
@@ -68,7 +68,7 @@ public class Exchange {
         if (o instanceof Bid) {// Order is a bid
             //Go to the asks half-book, see if there are matching asks (selling offers) and process them
             oOutcome =book.getAskbook().processOrder(o, time);
-            if(oOutcome.getunfulfilledorder().getQuantity>0){
+            if(oOutcome.getunfulfilledorder().getQuantity()>0){
                 book.getBidBook().addOrder(oOutcome.getUnfulfilledOrder());
             }
         } else { //order is an ask
@@ -76,7 +76,7 @@ public class Exchange {
             oOutcome =book.getBidBook().processOrder(o, time);
             //If the quanity of the unfulfilled order in the outcome is not zero
             if (oOutcome.getUnfulfilledOrder().getQuantity() > 0) {
-                book.getBidBook().addOrder(oOutcome.getUnfulfilledOrder())
+                book.getBidBook().addOrder(oOutcome.getUnfulfilledOrder());
             }
         }
         if (oOutcome.getResultingTrades() != null) {
